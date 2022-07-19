@@ -2,6 +2,8 @@
 
 Playing around with spotipy, and the Spotify Dev API
 
+![alit_text](streamlit_assets/screen_spoti.PNG)
+
 Built with ❤️ by [emiledesmaili](https://github.com/emiledesmaili)
 
 ## What's this?
