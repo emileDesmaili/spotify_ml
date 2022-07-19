@@ -36,7 +36,7 @@ st.sidebar.write(f'# Welcome')
 page_container = st.sidebar.container()
 with page_container:
     page = option_menu("Menu", ["Top Tracks", "Playlists"], 
-    icons=['reddit','dpad'], menu_icon="cast", default_index=0, orientation="vertical")
+    icons=['spotify','skip-end-circle'], menu_icon="cast", default_index=0, orientation="vertical")
 
 if page == 'Playlists':
 
