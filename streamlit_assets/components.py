@@ -23,7 +23,8 @@ class User:
     def get_wordcloud(df):
         text = " ".join(i for i in df['artist'].str.replace(' ',''))
         stopwords = list(set(STOPWORDS))
-        wordcloud = WordCloud(stopwords=stopwords, background_color="black", colormap='PuBu').generate(text)
+        wordcloud = WordCloud(stopwords=stopwords, background_color=None,mode='RGBA', colormap='spring', width=600, height=300,
+                     font_path='streamlit_assets/fonts/BRITANIC.ttf').generate(text)
         st.image(wordcloud.to_array())
     
     def get_playlists(self):
@@ -35,6 +36,7 @@ class User:
             playlist_names.append(pl['name'])
         self.playlists = dict(zip(playlist_names,playlist_ids))
     
+
     def get_playlist_df(self, playlist_id):
         playlist = self.sp.playlist(playlist_id)
         artists = []
@@ -87,12 +89,14 @@ class User:
                         range_r = [], color=radar_df.index,
                         color_discrete_sequence=px.colors.qualitative.Plotly,
                         template='plotly_dark')
+        fig.update_layout(showlegend=False, plot_bgcolor="rgba(0,0,0,0)")
+
         st.plotly_chart(fig)
     
-    def plot_tracks(self, df,size):
+    def plot_tracks(self, df,size,k):
         X = np.array(df.drop(['id','name','artist'], axis=1))
 
-        kmeans = KMeans(n_clusters=4, random_state=42)
+        kmeans = KMeans(n_clusters=k, random_state=42)
         df['cluster'] = kmeans.fit_predict(X)
 
         X_proj = TSNE(n_components=2, learning_rate='auto',
@@ -110,7 +114,7 @@ class User:
         fig = px.scatter(df,x='X',y='Y',color='cluster_str',size=size, template='plotly_dark', hover_name="track_str", hover_data=hover_dict,
                         color_discrete_sequence=px.colors.qualitative.Plotly)
         #legend
-        fig.update_layout(showlegend=False)
+        fig.update_layout(showlegend=False, plot_bgcolor="rgba(0,0,0,0)")
         #x axis
         fig.update_xaxes(visible=False)
 

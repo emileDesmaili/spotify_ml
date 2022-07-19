@@ -38,19 +38,29 @@ with page_container:
     page = option_menu("Menu", ["Top Tracks", "Playlists"], 
     icons=['reddit','dpad'], menu_icon="cast", default_index=0, orientation="vertical")
 
+if page == 'Playlists':
 
-user = User()
-user.get_playlists()
+    user = User()
+    user.get_playlists()
 
-selection = st.selectbox('Select Playlist',user.playlists.keys())
-selected_playlist = user.playlists[selection]
+    selection = st.selectbox('Select Playlist',user.playlists.keys())
+    selected_playlist = user.playlists[selection]
+    if selected_playlist not in st.session_state:
+    #     session_str = 'df'+selected_playlist
+        st.session_state[selected_playlist] = user.get_playlist_df(selected_playlist)
 
-df = user.get_playlist_df(selected_playlist)
-col1, col2 = st.columns(2)
-with col1:
-    user.plot_radar(df)
-with col2:
-    user.get_wordcloud(df)
-    metric = st.selectbox('Select metric',['danceability','energy','speechiness','acousticness','instrumentalness','liveness','valence','mode'])
-    user.plot_tracks(df,metric)
+    df = st.session_state[selected_playlist].copy()
+
+
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write('### Playlist Metrics & Artists ')
+        user.plot_radar(df)
+        metric = st.selectbox('Select metric',['danceability','energy','speechiness','acousticness','instrumentalness','liveness','valence','mode'])
+        k = st.slider('Select number of clusters',1,10,step=1,value=5)
+    with col2:
+        st.write('### Song Visualizer')
+        user.get_wordcloud(df)
+        user.plot_tracks(df,metric,k)
 
