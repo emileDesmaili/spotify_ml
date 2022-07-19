@@ -1,6 +1,6 @@
 # spotify-ml
 
-Testing Spotify Dev
+Playing around with spotipy, and the Spotify Dev API
 
 Built with ❤️ by [emiledesmaili](https://github.com/emiledesmaili)
 
