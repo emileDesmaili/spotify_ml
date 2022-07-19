@@ -23,7 +23,7 @@ class User:
     def get_wordcloud(df):
         text = " ".join(i for i in df['artist'].str.replace(' ',''))
         stopwords = list(set(STOPWORDS))
-        wordcloud = WordCloud(stopwords=stopwords, background_color=None,mode='RGBA', colormap='spring', width=600, height=300,
+        wordcloud = WordCloud(stopwords=stopwords, background_color=None,mode='RGBA', colormap='cool', width=600, height=300,
                      font_path='streamlit_assets/fonts/BRITANIC.ttf').generate(text)
         st.image(wordcloud.to_array())
     
@@ -120,7 +120,7 @@ class User:
 
         #y axis    
         fig.update_yaxes(visible=False)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=False)
 
 
 
