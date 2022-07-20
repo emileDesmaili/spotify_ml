@@ -70,8 +70,6 @@ class User:
                 tracklist.append(item['track'])
 
         
-
-
         MAX_THREADS = 100
         threads = min(MAX_THREADS, len(tracklist))
 
