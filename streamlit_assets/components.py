@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
 import streamlit as st
+import concurrent.futures
 
 class User:
 
@@ -36,50 +37,52 @@ class User:
             playlist_names.append(pl['name'])
         self.playlists = dict(zip(playlist_names,playlist_ids))
     
+    def get_features(self, item):     
+        track = item['name']
+        uri = item['uri']
+        artist = item['artists'][0]['name']
+        features = self.sp.audio_features(uri)[0]
+        danceability = features['danceability']
+        energy = (features['energy'])
+        key = (features['key'])
+        loudness= (features['loudness'])
+        mode = (features['mode'])
+        speechiness = (features['speechiness'])
+        acousticness = (features['acousticness'])
+        instrumentalness = (features['instrumentalness'])
+        liveness = (features['liveness'])
+        valence = (features['valence'])
+        tempo = (features['tempo'])
+        return list([uri,track,artist,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo])
+    
 
     def get_playlist_df(self, playlist_id):
-        playlist = self.sp.playlist(playlist_id)
-        artists = []
-        track_names = []
-        track_ids = []
-        danceability = []
-        energy = []
-        key = []
-        loudness = []
-        mode = []
-        speechiness = []
-        acousticness = []
-        instrumentalness = []
-        liveness = []
-        valence = []
-        tempo = []
         
-        for idx, item in enumerate(playlist['tracks']['items']):
-            track = item['track']['name']
-            id = item['track']['id']
-            artist = item['track']['artists'][0]['name']
-            
-            artists.append(artist)
-            track_names.append(track)
-            track_ids.append(id)
-            features = self.sp.audio_features(id)[0]
-            danceability.append(features['danceability'])
-            energy.append(features['energy'])
-            key.append(features['key'])
-            loudness.append(features['loudness'])
-            mode.append(features['mode'])
-            speechiness.append(features['speechiness'])
-            acousticness.append(features['acousticness'])
-            instrumentalness.append(features['instrumentalness'])
-            liveness.append(features['liveness'])
-            valence.append(features['valence'])
-            tempo.append(features['tempo'])
+        if playlist_id =='top tracks': 
+            tracks = self.sp.current_user_top_tracks(limit=50, time_range='short_term')
+            tracklist = []
+            for idx, item in enumerate(tracks['items']):
+                tracklist.append(item)
+        else:
+            tracks = self.sp.playlist(playlist_id)
+            tracklist = []
+            for idx, item in enumerate(tracks['tracks']['items']):
+                tracklist.append(item['track'])
 
-        df = pd.DataFrame(list(zip(track_ids,track_names,artists, 
-                            danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness, valence, tempo)), 
-                            columns=['id','name','artist', 'danceability','energy','key','loudness','mode','speechiness','acousticness',
+        
+
+
+        MAX_THREADS = 100
+        threads = min(MAX_THREADS, len(tracklist))
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
+            features = executor.map(self.get_features, tracklist)
+
+        df = pd.DataFrame(features, columns=['id','name','artist', 'danceability','energy','key','loudness','mode','speechiness','acousticness',
                             'instrumentalness','liveness','valence', 'tempo'])
         return df
+
+
     
     def plot_radar(self,df):
 

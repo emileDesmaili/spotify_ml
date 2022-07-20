@@ -38,6 +38,26 @@ with page_container:
     page = option_menu("Menu", ["Top Tracks", "Playlists"], 
     icons=['spotify','skip-end-circle'], menu_icon="cast", default_index=0, orientation="vertical")
 
+if page == 'Top Tracks':
+    user = User()
+    df = user.get_playlist_df(playlist_id='top tracks')
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write('### Playlist Audio Features')
+        user.plot_radar(df)
+    with col2:
+        st.write('### Artists')
+        user.get_wordcloud(df)
+
+    col3, col4 = st.columns([1,2])
+    with col3:
+        st.write('### Songs Visualizer')
+        metric = st.selectbox('Select metric',['danceability','energy','speechiness','acousticness','instrumentalness','liveness','valence','mode'])
+        k = st.slider('Select number of clusters',1,10,step=1,value=5)
+    with col4:
+        user.plot_tracks(df,metric,k)
+
 if page == 'Playlists':
 
     user = User()
