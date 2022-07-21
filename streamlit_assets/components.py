@@ -36,7 +36,7 @@ class User:
         text = " ".join(i for i in df['artist'].str.replace(' ',''))
         stopwords = list(set(STOPWORDS))
         wordcloud = WordCloud(stopwords=stopwords, background_color=None,mode='RGBA', colormap='cool', width=600, height=300,
-                     font_path='streamlit_assets/fonts/BRITANIC.ttf').generate(text)
+                     font_path='streamlit_assets/fonts/BRITANIC.TTF').generate(text)
         st.image(wordcloud.to_array())
     
     def get_playlists(self):
