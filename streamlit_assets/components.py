@@ -25,6 +25,7 @@ class User:
             self.token = doc['access_token']
         
         self.auth_manager = SpotifyOAuth(client_id=self.client_id, client_secret=self.secret_id, redirect_uri=self.redirect_uri, scope=self.scope, open_browser=False)
+        self.token = self.auth_manager.get_access_token()['access_token']
         self.auth_url = self.auth_manager.get_authorize_url()
         
         
