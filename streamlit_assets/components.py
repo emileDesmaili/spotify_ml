@@ -94,7 +94,7 @@ class User:
                 tracklist.append(item['track'])
 
         
-        MAX_THREADS = 100
+        MAX_THREADS = 20
         threads = min(MAX_THREADS, len(tracklist))
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
