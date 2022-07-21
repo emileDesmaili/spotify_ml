@@ -123,13 +123,14 @@ class User:
 
         kmeans = KMeans(n_clusters=k, random_state=42)
         df['cluster'] = kmeans.fit_predict(X)
+        st.write('a')
 
         X_proj = TSNE(n_components=2, learning_rate='auto',
                         init='random', random_state=42).fit_transform(X)
 
         df['X'] = [item[0] for item in X_proj]
         df['Y'] = [item[1] for item in X_proj]
-
+        st.write('b')
         #plots
         df['cluster_str'] = df['cluster'].astype(str)
         df['track_str'] = df['name'] + " - " + df['artist']
@@ -179,7 +180,7 @@ class User:
             k = st.slider('Select number of clusters',1,10,step=1,value=5)
         with col4:
             pass
-            #self.plot_tracks(df,metric,k)
+            self.plot_tracks(df,metric,k)
 
 
 
