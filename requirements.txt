@@ -1,5 +1,5 @@
 streamlit
-sklearn
+sklearn=1.1.1
 spotipy
 plotly
 streamlit-option-menu
