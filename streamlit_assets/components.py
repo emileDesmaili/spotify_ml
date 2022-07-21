@@ -179,7 +179,7 @@ class User:
             metric = st.selectbox('Select metric',['danceability','energy','speechiness','acousticness','instrumentalness','liveness','valence'])
             k = st.slider('Select number of clusters',1,10,step=1,value=5)
         with col4:
-            pass
+            
             self.plot_tracks(df,metric,k)
 
 
