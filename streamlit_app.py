@@ -45,7 +45,7 @@ if 'user' not in st.session_state:
     st.session_state['user'] = user
 
 
-if user.sp:
+if st.session_state['user'].sp:
 
     if page == 'Top Tracks':
         
