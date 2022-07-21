@@ -2,6 +2,8 @@
 
 Playing around with spotipy, and the Spotify Dev API
 
+[Link to app](https://emiledesmaili-spotify-ml-streamlit-app-i1zkrm.streamlitapp.com/)
+
 ![alt_text](streamlit_assets/screen_spoti.PNG)
 
 Built with ❤️ by [emiledesmaili](https://github.com/emiledesmaili)
