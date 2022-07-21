@@ -1,1 +1,9 @@
-streamlit==1.8.1
+streamlit
+sklearn
+spotipy
+plotly
+streamlit-option-menu
+pandas
+numpy
+wordcloud
+matplotlib
