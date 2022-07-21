@@ -123,14 +123,14 @@ class User:
 
         kmeans = KMeans(n_clusters=k, random_state=42)
         df['cluster'] = kmeans.fit_predict(X)
-        st.write('a')
+        
 
         X_proj = TSNE(n_components=2, learning_rate='auto',
                         init='random', random_state=42).fit_transform(X)
 
         df['X'] = [item[0] for item in X_proj]
         df['Y'] = [item[1] for item in X_proj]
-        st.write('b')
+        
         #plots
         df['cluster_str'] = df['cluster'].astype(str)
         df['track_str'] = df['name'] + " - " + df['artist']
@@ -138,7 +138,8 @@ class User:
         hover_dict = {'X':False,'Y':False,'cluster':False,size:False, 'cluster_str':False}
 
         fig = px.scatter(df,x='X',y='Y',color='cluster_str',size=size, hover_name="track_str", hover_data=hover_dict,
-                        color_discrete_sequence=px.colors.qualitative.Light24)
+                        #color_discrete_sequence=px.colors.qualitative.Light24
+                        )
         #legend
         fig.update_layout(showlegend=False, plot_bgcolor="rgba(0,0,0,0)")
         #x axis
