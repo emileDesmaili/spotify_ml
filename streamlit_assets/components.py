@@ -68,7 +68,7 @@ class User:
             for idx, item in enumerate(tracks['items']):
                 tracklist.append(item)
         elif playlist_id =='recos':
-            tracks = self.sp.recommendations(seed_tracks=seed_tracks)
+            tracks = self.sp.recommendations(seed_tracks=seed_tracks, limit=20)
             tracklist = []
             for idx, item in enumerate(tracks['tracks']):
                 tracklist.append(item)

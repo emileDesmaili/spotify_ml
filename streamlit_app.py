@@ -36,7 +36,7 @@ st.sidebar.write(f'# Welcome')
 page_container = st.sidebar.container()
 with page_container:
     page = option_menu("Menu", ["Top Tracks", "Playlists","Recommendations"], 
-    icons=['spotify','skip-end-circle','brain'], menu_icon="cast", default_index=0, orientation="vertical")
+    icons=['speaker','skip-end-circle','lightbulb'], menu_icon="spotify", default_index=0, orientation="vertical")
 
 if page == 'Top Tracks':
     user = User()
@@ -45,7 +45,7 @@ if page == 'Top Tracks':
     time_range = time_dict[selection]
     df = user.get_playlist_df(playlist_id='top tracks', time_range=time_range)
     st.write('# Your Top Tracks')
-    user.display_tracks(df,n=5)
+    user.display_tracks(df,n=6)
 
     user.display_metrics(df)
 
@@ -76,7 +76,9 @@ if page =='Recommendations':
 
     df = user.get_recos_df(base)
     st.write('# Your Recommendations')
-    user.display_tracks(df,n=5)
+    n=6
+    user.display_tracks(df,n=n)
+    user.display_tracks(df[n:],n=n)
 
     user.display_metrics(df)
 
