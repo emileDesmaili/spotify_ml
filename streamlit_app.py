@@ -38,7 +38,7 @@ with page_container:
     icons=['speaker','skip-end-circle','lightbulb'], menu_icon="spotify", default_index=0, orientation="vertical")
 
 user = User()
-st.write(f'<h2><a href="{user.auth_url}">Sign in</a></h2>')
+st.write(f'<h2><a href="{user.auth_manager}">Sign in</a></h2>')
 
 if page == 'Top Tracks':
     
