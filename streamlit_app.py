@@ -37,8 +37,11 @@ with page_container:
     page = option_menu("Menu", ["Top Tracks", "Playlists","Recommendations"], 
     icons=['speaker','skip-end-circle','lightbulb'], menu_icon="spotify", default_index=0, orientation="vertical")
 
+user = User()
+st.write(f'<h2><a href="{user.auth_url}">Sign in</a></h2>')
+
 if page == 'Top Tracks':
-    user = User()
+    
     time_dict = {"Short Term":'short_term',"Medium Term":'medium_term','Long Term':'long_term'}
     selection= st.selectbox('Select time range',time_dict.keys())
     time_range = time_dict[selection]
