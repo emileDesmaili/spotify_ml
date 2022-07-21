@@ -19,7 +19,7 @@ class User:
         self.secret_id = '7274e34729fc407d9f0bef405fd24805'
         self.redirect_uri = 'https://emiledesmaili-spotify-ml-streamlit-app-i1zkrm.streamlitapp.com/callback'
         self.scope = "user-library-read, playlist-read-private, user-read-private, user-read-playback-state, user-top-read, user-follow-read, user-read-currently-playing, user-read-recently-played"
-        with open('.cache copy', "r") as cache_file:
+        with open('.cache', "r") as cache_file:
             doc = json.load(cache_file)
             self.token = doc['access_token']
         
