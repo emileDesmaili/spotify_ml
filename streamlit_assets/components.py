@@ -10,20 +10,26 @@ from wordcloud import WordCloud, STOPWORDS
 import streamlit as st
 import concurrent.futures
 import streamlit.components.v1 as components
+import json
 
 class User:
 
     def __init__(self):
         self.client_id = 'aa3b040fe8a14f47babd5211bc20f4c8' 
         self.secret_id = '7274e34729fc407d9f0bef405fd24805'
-        self.redirect_uri = 'http://localhost:8000/callback'
+        self.redirect_uri = 'https://emiledesmaili-spotify-ml-streamlit-app-i1zkrm.streamlitapp.com/callback'
         self.scope = "user-library-read, playlist-read-private, user-read-private, user-read-playback-state, user-top-read, user-follow-read, user-read-currently-playing, user-read-recently-played"
+        with open('.cache', "r") as cache_file:
+            doc = json.load(cache_file)
+            self.token = doc['access_token']
+        
         self.auth_manager = SpotifyOAuth(client_id=self.client_id, client_secret=self.secret_id, redirect_uri=self.redirect_uri, scope=self.scope, open_browser=False)
         self.auth_url = self.auth_manager.get_authorize_url()
         
         
     def auth(self): 
-        self.sp = spotipy.Spotify(auth_manager=self.auth_manager)
+        #self.sp = spotipy.Spotify(auth_manager=self.auth_manager)
+        self.sp = spotipy.Spotify(auth=self.token)
     
     @staticmethod
     def get_wordcloud(df):
@@ -130,8 +136,8 @@ class User:
 
         hover_dict = {'X':False,'Y':False,'cluster':False,size:False, 'cluster_str':False}
 
-        fig = px.scatter(df,x='X',y='Y',color='cluster_str',size=size, template='plotly_dark', hover_name="track_str", hover_data=hover_dict,
-                        color_discrete_sequence=px.colors.qualitative.Plotly)
+        fig = px.scatter(df,x='X',y='Y',color='cluster_str',size=size, hover_name="track_str", hover_data=hover_dict,
+                        color_discrete_sequence=px.colors.qualitative.Light24)
         #legend
         fig.update_layout(showlegend=False, plot_bgcolor="rgba(0,0,0,0)")
         #x axis
