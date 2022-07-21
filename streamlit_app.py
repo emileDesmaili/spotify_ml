@@ -37,13 +37,17 @@ with page_container:
     page = option_menu("Menu", ["Top Tracks", "Playlists","Recommendations"], 
     icons=['speaker','skip-end-circle','lightbulb'], menu_icon="spotify", default_index=0, orientation="vertical")
 ## AUTH
-user = User()
-#st.write(f'<h2><a href="{user.auth_url}">Sign in</a></h2>', unsafe_allow_html=True)
-user.auth()
+if 'user' not in st.session_state:
+
+    user = User()
+    #st.write(f'<h2><a href="{user.auth_url}">Sign in</a></h2>', unsafe_allow_html=True)
+    user.auth()
+    st.session_state['user'] = user
 
 
 if page == 'Top Tracks':
     
+    user = st.session_state['user']
     time_dict = {"Short Term":'short_term',"Medium Term":'medium_term','Long Term':'long_term'}
     selection= st.selectbox('Select time range',time_dict.keys())
     time_range = time_dict[selection]
@@ -55,6 +59,7 @@ if page == 'Top Tracks':
 
 if page == 'Playlists':
 
+    user = st.session_state['user']
     user.get_playlists()
 
     selection = st.selectbox('Select Playlist',user.playlists.keys())
@@ -70,6 +75,7 @@ if page == 'Playlists':
 
 if page =='Recommendations':
 
+    user = st.session_state['user']
     user.get_playlists()
     bases = user.playlists
     bases['Top Tracks'] ='top tracks'
