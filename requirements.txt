@@ -7,5 +7,4 @@ pandas
 numpy
 wordcloud
 matplotlib
-PIL
-Pillow
+
