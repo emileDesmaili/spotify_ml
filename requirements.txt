@@ -8,3 +8,4 @@ numpy
 wordcloud
 matplotlib
 PIL
+pillow
