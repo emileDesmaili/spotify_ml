@@ -38,6 +38,8 @@ with page_container:
     icons=['speaker','skip-end-circle','lightbulb'], menu_icon="spotify", default_index=0, orientation="vertical")
 ## AUTH
 user = User()
+st.write(f'<h2><a href="{user.auth_url}">Sign in</a></h2>', unsafe_allow_html=True)
+user.auth()
 
 
 if page == 'Top Tracks':
