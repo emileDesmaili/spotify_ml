@@ -18,7 +18,7 @@ class User:
         self.secret_id = '7274e34729fc407d9f0bef405fd24805'
         self.redirect_uri = 'http://127.0.0.1:8000'
         self.scope = "user-library-read, playlist-read-private, user-read-private, user-read-playback-state, user-top-read, user-follow-read, user-read-currently-playing, user-read-recently-played"
-        self.auth_manager = SpotifyOAuth(client_id=self.client_id, client_secret=self.secret_id, redirect_uri=self.redirect_uri, scope=self.scope)
+        self.auth_manager = SpotifyOAuth(client_id=self.client_id, client_secret=self.secret_id, redirect_uri=self.redirect_uri, scope=self.scope, open_browser=False)
         self.auth_url = self.auth_manager.get_authorize_url()
         
         
