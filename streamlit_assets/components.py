@@ -126,7 +126,7 @@ class User:
         df['cluster'] = kmeans.fit_predict(X)
         
 
-        X_proj = TSNE(n_components=2, random_state=42).fit_transform(X)
+        X_proj = TSNE(n_components=2, random_state=42, init='pca').fit_transform(X)
 
         df['X'] = [item[0] for item in X_proj]
         df['Y'] = [item[1] for item in X_proj]
