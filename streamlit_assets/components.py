@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
 import streamlit as st
 import concurrent.futures
+import streamlit.components.v1 as components
 
 class User:
 
@@ -41,6 +42,9 @@ class User:
         track = item['name']
         uri = item['uri']
         artist = item['artists'][0]['name']
+        album_cover = item['album']['images'][1]['url']
+        preview = item['preview_url']
+        popularity = item['popularity']
         features = self.sp.audio_features(uri)[0]
         danceability = features['danceability']
         energy = (features['energy'])
@@ -53,13 +57,13 @@ class User:
         liveness = (features['liveness'])
         valence = (features['valence'])
         tempo = (features['tempo'])
-        return list([uri,track,artist,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo])
+        return list([uri,track,artist,album_cover, preview, popularity,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo])
     
 
-    def get_playlist_df(self, playlist_id):
+    def get_playlist_df(self, playlist_id,time_range='short_term'):
         
         if playlist_id =='top tracks': 
-            tracks = self.sp.current_user_top_tracks(limit=50, time_range='short_term')
+            tracks = self.sp.current_user_top_tracks(limit=50, time_range=time_range)
             tracklist = []
             for idx, item in enumerate(tracks['items']):
                 tracklist.append(item)
@@ -76,14 +80,14 @@ class User:
         with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
             features = executor.map(self.get_features, tracklist)
 
-        df = pd.DataFrame(features, columns=['id','name','artist', 'danceability','energy','key','loudness','mode','speechiness','acousticness',
-                            'instrumentalness','liveness','valence', 'tempo'])
+        df = pd.DataFrame(features, columns=['id','name','artist','album_cover','preview','popularity' ,
+                                        'danceability','energy','key','loudness','mode','speechiness','acousticness',
+                                        'instrumentalness','liveness','valence', 'tempo'])
         return df
 
 
     
     def plot_radar(self,df):
-
         mean_df = df.mean(axis=0)
         radar_df = mean_df.filter(items=['danceability','energy','speechiness','acousticness','instrumentalness','liveness','valence','mode',])
         fig = px.bar_polar(radar_df, r=radar_df.values, theta=radar_df.index, 
@@ -95,7 +99,7 @@ class User:
         st.plotly_chart(fig)
     
     def plot_tracks(self, df,size,k):
-        X = np.array(df.drop(['id','name','artist'], axis=1))
+        X = np.array(df.drop(['id','name','artist','preview','album_cover','popularity','key','mode'], axis=1))
 
         kmeans = KMeans(n_clusters=k, random_state=42)
         df['cluster'] = kmeans.fit_predict(X)
@@ -121,9 +125,40 @@ class User:
 
         #y axis    
         fig.update_yaxes(visible=False)
-        st.plotly_chart(fig, use_container_width=False)
+        st.plotly_chart(fig, use_container_width=True)
+    
+    def display_tracks(self,df,n=5):
+        
+        columns = st.columns(n)
+        for a, x in enumerate(columns):
+            with x:
+                name = df['name'].iloc[a]
+                artist = df['artist'].iloc[a]
+                cover = df['album_cover'].iloc[a]
+                preview = df['preview'].iloc[a]
+                st.write(f'**{name}**' +" - " +artist)
+                st.image(cover)
+                st.audio(preview, format='audio/ogg')
 
+    def display_metrics(self,df):
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write('### Playlist Audio Features')
+            self.plot_radar(df)
+        with col2:
+            pop = str(round(df['popularity'].mean()))
+            st.write('#### Average Popularity: ' + f'{pop}')
+            st.write('### Artists')
+            self.get_wordcloud(df)
+            
 
+        col3, col4 = st.columns([1,3])
+        with col3:
+            st.write('### Songs Visualizer')
+            metric = st.selectbox('Select metric',['danceability','energy','speechiness','acousticness','instrumentalness','liveness','valence'])
+            k = st.slider('Select number of clusters',1,10,step=1,value=5)
+        with col4:
+            self.plot_tracks(df,metric,k)
 
 
 

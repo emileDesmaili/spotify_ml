@@ -40,23 +40,14 @@ with page_container:
 
 if page == 'Top Tracks':
     user = User()
-    df = user.get_playlist_df(playlist_id='top tracks')
+    time_dict = {"Short Term":'short_term',"Medium Term":'medium_term','Long Term':'long_term'}
+    selection= st.selectbox('Select time range',time_dict.keys())
+    time_range = time_dict[selection]
+    df = user.get_playlist_df(playlist_id='top tracks', time_range=time_range)
+    st.write('# Your Top Tracks')
+    user.display_tracks(df,n=5)
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write('### Playlist Audio Features')
-        user.plot_radar(df)
-    with col2:
-        st.write('### Artists')
-        user.get_wordcloud(df)
-
-    col3, col4 = st.columns([1,2])
-    with col3:
-        st.write('### Songs Visualizer')
-        metric = st.selectbox('Select metric',['danceability','energy','speechiness','acousticness','instrumentalness','liveness','valence','mode'])
-        k = st.slider('Select number of clusters',1,10,step=1,value=5)
-    with col4:
-        user.plot_tracks(df,metric,k)
+    user.display_metrics(df)
 
 if page == 'Playlists':
 
@@ -71,21 +62,7 @@ if page == 'Playlists':
 
     df = st.session_state[selected_playlist].copy()
 
+    user.display_metrics(df)
 
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write('### Playlist Audio Features')
-        user.plot_radar(df)
-    with col2:
-        st.write('### Artists')
-        user.get_wordcloud(df)
-
-    col3, col4 = st.columns([1,2])
-    with col3:
-        st.write('### Songs Visualizer')
-        metric = st.selectbox('Select metric',['danceability','energy','speechiness','acousticness','instrumentalness','liveness','valence','mode'])
-        k = st.slider('Select number of clusters',1,10,step=1,value=5)
-    with col4:
-        user.plot_tracks(df,metric,k)
 
