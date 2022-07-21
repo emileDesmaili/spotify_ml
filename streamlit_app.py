@@ -38,7 +38,7 @@ with page_container:
     icons=['speaker','skip-end-circle','lightbulb'], menu_icon="spotify", default_index=0, orientation="vertical")
 ## AUTH
 user = User()
-st.write(f'<h2><a href="{user.auth_url}">Sign in</a></h2>', unsafe_allow_html=True)
+
 
 if page == 'Top Tracks':
     
@@ -53,7 +53,6 @@ if page == 'Top Tracks':
 
 if page == 'Playlists':
 
-    user = User()
     user.get_playlists()
 
     selection = st.selectbox('Select Playlist',user.playlists.keys())
@@ -69,7 +68,6 @@ if page == 'Playlists':
 
 if page =='Recommendations':
 
-    user = User()
     user.get_playlists()
     bases = user.playlists
     bases['Top Tracks'] ='top tracks'

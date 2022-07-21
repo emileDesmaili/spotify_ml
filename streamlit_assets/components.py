@@ -21,6 +21,7 @@ class User:
         self.auth_manager = SpotifyOAuth(client_id=self.client_id, client_secret=self.secret_id, redirect_uri=self.redirect_uri, scope=self.scope, open_browser=False)
         self.auth_url = self.auth_manager.get_authorize_url()
         
+        st.write(f'<h2><a href="{self.auth_url}">Sign in</a></h2>', unsafe_allow_html=True)
         
         self.sp = spotipy.Spotify(auth_manager=self.auth_manager)
     
