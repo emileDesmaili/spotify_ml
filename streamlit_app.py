@@ -35,8 +35,8 @@ st.sidebar.write(f'# Welcome')
 
 page_container = st.sidebar.container()
 with page_container:
-    page = option_menu("Menu", ["Top Tracks", "Playlists"], 
-    icons=['spotify','skip-end-circle'], menu_icon="cast", default_index=0, orientation="vertical")
+    page = option_menu("Menu", ["Top Tracks", "Playlists","Recommendations"], 
+    icons=['spotify','skip-end-circle','brain'], menu_icon="cast", default_index=0, orientation="vertical")
 
 if page == 'Top Tracks':
     user = User()
@@ -63,6 +63,23 @@ if page == 'Playlists':
     df = st.session_state[selected_playlist].copy()
 
     user.display_metrics(df)
+
+
+if page =='Recommendations':
+
+    user = User()
+    user.get_playlists()
+    bases = user.playlists
+    bases['Top Tracks'] ='top tracks'
+    selection = st.selectbox('Base my recommendations on: ',bases.keys())
+    base = bases[selection]
+
+    df = user.get_recos_df(base)
+    st.write('# Your Recommendations')
+    user.display_tracks(df,n=5)
+
+    user.display_metrics(df)
+
 
 
 

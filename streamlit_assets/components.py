@@ -60,12 +60,17 @@ class User:
         return list([uri,track,artist,album_cover, preview, popularity,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo])
     
 
-    def get_playlist_df(self, playlist_id,time_range='short_term'):
+    def get_playlist_df(self, playlist_id, time_range='short_term', seed_tracks=None):
         
         if playlist_id =='top tracks': 
             tracks = self.sp.current_user_top_tracks(limit=50, time_range=time_range)
             tracklist = []
             for idx, item in enumerate(tracks['items']):
+                tracklist.append(item)
+        elif playlist_id =='recos':
+            tracks = self.sp.recommendations(seed_tracks=seed_tracks)
+            tracklist = []
+            for idx, item in enumerate(tracks['tracks']):
                 tracklist.append(item)
         else:
             tracks = self.sp.playlist(playlist_id)
@@ -85,6 +90,11 @@ class User:
                                         'instrumentalness','liveness','valence', 'tempo'])
         return df
 
+    def get_recos_df(self,base):
+        base_df = self.get_playlist_df(playlist_id=base)
+        seed_tracks = list(base_df['id'].values)[:4]
+        df = self.get_playlist_df(playlist_id='recos', seed_tracks=seed_tracks)
+        return df
 
     
     def plot_radar(self,df):
@@ -143,7 +153,7 @@ class User:
     def display_metrics(self,df):
         col1, col2 = st.columns(2)
         with col1:
-            st.write('### Playlist Audio Features')
+            st.write('### Audio Features')
             self.plot_radar(df)
         with col2:
             pop = str(round(df['popularity'].mean()))
