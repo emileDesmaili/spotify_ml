@@ -31,7 +31,10 @@ class User:
         
     def auth(self): 
         #self.sp = spotipy.Spotify(auth_manager=self.auth_manager)
-        self.sp = spotipy.Spotify(auth=self.token)
+        try:
+            self.sp = spotipy.Spotify(auth=self.token)
+        except:
+            st.error('Problem with authentification')
     
     @staticmethod
     def get_wordcloud(df):
