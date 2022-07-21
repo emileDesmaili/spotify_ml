@@ -45,50 +45,52 @@ if 'user' not in st.session_state:
     st.session_state['user'] = user
 
 
-if page == 'Top Tracks':
-    
-    user = st.session_state['user']
-    time_dict = {"Short Term":'short_term',"Medium Term":'medium_term','Long Term':'long_term'}
-    selection= st.selectbox('Select time range',time_dict.keys())
-    time_range = time_dict[selection]
-    df = user.get_playlist_df(playlist_id='top tracks', time_range=time_range)
-    st.write('# Your Top Tracks')
-    user.display_tracks(df,n=6)
+if user.sp:
 
-    user.display_metrics(df)
+    if page == 'Top Tracks':
+        
+        user = st.session_state['user']
+        time_dict = {"Short Term":'short_term',"Medium Term":'medium_term','Long Term':'long_term'}
+        selection= st.selectbox('Select time range',time_dict.keys())
+        time_range = time_dict[selection]
+        df = user.get_playlist_df(playlist_id='top tracks', time_range=time_range)
+        st.write('# Your Top Tracks')
+        user.display_tracks(df,n=6)
 
-if page == 'Playlists':
+        user.display_metrics(df)
 
-    user = st.session_state['user']
-    user.get_playlists()
+    if page == 'Playlists':
 
-    selection = st.selectbox('Select Playlist',user.playlists.keys())
-    selected_playlist = user.playlists[selection]
-    if selected_playlist not in st.session_state:
-    #     session_str = 'df'+selected_playlist
-        st.session_state[selected_playlist] = user.get_playlist_df(selected_playlist)
+        user = st.session_state['user']
+        user.get_playlists()
 
-    df = st.session_state[selected_playlist].copy()
+        selection = st.selectbox('Select Playlist',user.playlists.keys())
+        selected_playlist = user.playlists[selection]
+        if selected_playlist not in st.session_state:
+        #     session_str = 'df'+selected_playlist
+            st.session_state[selected_playlist] = user.get_playlist_df(selected_playlist)
 
-    user.display_metrics(df)
+        df = st.session_state[selected_playlist].copy()
+
+        user.display_metrics(df)
 
 
-if page =='Recommendations':
+    if page =='Recommendations':
 
-    user = st.session_state['user']
-    user.get_playlists()
-    bases = user.playlists
-    bases['Top Tracks'] ='top tracks'
-    selection = st.selectbox('Base my recommendations on: ',bases.keys())
-    base = bases[selection]
+        user = st.session_state['user']
+        user.get_playlists()
+        bases = user.playlists
+        bases['Top Tracks'] ='top tracks'
+        selection = st.selectbox('Base my recommendations on: ',bases.keys())
+        base = bases[selection]
 
-    df = user.get_recos_df(base)
-    st.write('# Your Recommendations')
-    n=6
-    user.display_tracks(df,n=n)
-    user.display_tracks(df[n:],n=n)
+        df = user.get_recos_df(base)
+        st.write('# Your Recommendations')
+        n=6
+        user.display_tracks(df,n=n)
+        user.display_tracks(df[n:],n=n)
 
-    user.display_metrics(df)
+        user.display_metrics(df)
 
 
 
