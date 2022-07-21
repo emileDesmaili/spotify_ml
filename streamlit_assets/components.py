@@ -128,8 +128,8 @@ class User:
         X_proj = TSNE(n_components=2, learning_rate='auto',
                      init='random', random_state=42).fit_transform(X)
 
-        df['X'] = [item[0] for item in X_proj]
-        df['Y'] = [item[1] for item in X_proj]
+        #df['X'] = [item[0] for item in X_proj]
+        #df['Y'] = [item[1] for item in X_proj]
         
         #plots
         df['cluster_str'] = df['cluster'].astype(str)
